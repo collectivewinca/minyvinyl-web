@@ -7,9 +7,25 @@ interface FormData {
   name: string;
   email: string;
   phone: string;
+  eventDate: string;
 }
 
-const sendConfirmationEmail = async (name: string, email: string) => {
+const EVENTS = {
+  'april': {
+    date: 'April 9, 2025 Wednesday',
+    time: '8:00 PM - 10:00 PM',
+    location: 'The 13th Storey - 216 E 45th St 13th Fl, New York, NY 10017'
+  },
+  'may': {
+    date: 'May 4, 2025 Saturday',
+    time: '8:00 PM - 10:00 PM',
+    location: 'The 13th Storey - 216 E 45th St 13th Fl, New York, NY 10017'
+  }
+};
+
+const sendConfirmationEmail = async (name: string, email: string, eventDate: string) => {
+  const event = eventDate === 'april' ? EVENTS.april : EVENTS.may;
+  
   const emailContent = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f8f8;">
       <div style="background-color: #000000; padding: 30px; border-radius: 10px; color: #ffffff;">
@@ -25,9 +41,9 @@ const sendConfirmationEmail = async (name: string, email: string) => {
         
         <div style="background-color: #1a1a1a; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h2 style="color: #fbbf24; font-size: 20px; margin-bottom: 15px;">Event Details</h2>
-          <p style="margin: 10px 0;"><strong>Date:</strong> April 9, 2025</p>
-          <p style="margin: 10px 0;"><strong>Time:</strong> 8:00 PM - 10:00 PM</p>
-          <p style="margin: 10px 0;"><strong>Location:</strong> The 13th Storey - 216 E 45th St 13th Fl, New York, NY 10017</p>
+          <p style="margin: 10px 0;"><strong>Date:</strong> ${event.date}</p>
+          <p style="margin: 10px 0;"><strong>Time:</strong> ${event.time}</p>
+          <p style="margin: 10px 0;"><strong>Location:</strong> ${event.location}</p>
         </div>
         
         <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
@@ -74,10 +90,12 @@ const sendConfirmationEmail = async (name: string, email: string) => {
 
 export function CandleConcert() {
   const [showForm, setShowForm] = useState(false);
+  const [selectedDate, setSelectedDate] = useState('april');
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
-    phone: ''
+    phone: '',
+    eventDate: 'april'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -95,10 +113,10 @@ export function CandleConcert() {
       });
       
       // Send confirmation email
-      await sendConfirmationEmail(formData.name, formData.email);
+      await sendConfirmationEmail(formData.name, formData.email, formData.eventDate);
       
       alert('Registration successful! We look forward to seeing you at the concert.');
-      setFormData({ name: '', email: '', phone: '' });
+      setFormData({ name: '', email: '', phone: '', eventDate: 'april' });
       setShowForm(false);
     } catch (err) {
       setError('Failed to register. Please try again.');
@@ -107,6 +125,8 @@ export function CandleConcert() {
       setIsSubmitting(false);
     }
   };
+
+  const currentEvent = EVENTS[selectedDate];
 
   return (
     <div className="min-h-screen bg-black text-gray-300 py-12 px-4 md:px-6 overflow-y-auto">
@@ -131,18 +151,40 @@ export function CandleConcert() {
         <div className="mt-16 text-center">
           <h1 className="text-3xl md:text-5xl font-black text-amber-400 mb-8 tracking-tight">Candlelight Concert</h1>
           
-          <div className="flex flex-col gap-4 items-center justify-center text-base md:text-lg mb-12">
+          <div className="flex flex-col gap-6 items-center justify-center text-base md:text-lg mb-12">
+            <div className="flex gap-4 items-center justify-center">
+              <button
+                onClick={() => setSelectedDate('april')}
+                className={`px-6 py-2 rounded-full border ${
+                  selectedDate === 'april'
+                    ? 'bg-amber-400 text-black border-amber-400'
+                    : 'border-amber-400/30 text-amber-400 hover:bg-amber-400/10'
+                } transition-all`}
+              >
+                April 9th
+              </button>
+              <button
+                onClick={() => setSelectedDate('may')}
+                className={`px-6 py-2 rounded-full border ${
+                  selectedDate === 'may'
+                    ? 'bg-amber-400 text-black border-amber-400'
+                    : 'border-amber-400/30 text-amber-400 hover:bg-amber-400/10'
+                } transition-all`}
+              >
+                May 4th
+              </button>
+            </div>
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-amber-400" />
-              <span>April 9, 2025 Wednesday</span>
+              <span>{currentEvent.date}</span>
             </div>
             <div className="flex items-center gap-2">
               <Clock className="w-5 h-5 text-amber-400" />
-              <span>8:00 PM - 10:00 PM</span>
+              <span>{currentEvent.time}</span>
             </div>
             <div className="flex items-center gap-2">
               <MapPin className="w-5 h-5 text-amber-400" />
-              <span className="text-sm md:text-base">The 13th Storey - 216 E 45th St 13th Fl, New York, NY 10017</span>
+              <span className="text-sm md:text-base">{currentEvent.location}</span>
             </div>
           </div>
           
@@ -169,7 +211,10 @@ export function CandleConcert() {
           {!showForm ? (
             <button
               className="group relative inline-flex items-center justify-center px-6 md:px-8 py-3 text-base md:text-lg font-black uppercase tracking-widest overflow-hidden bg-amber-400 rounded-lg hover:bg-amber-500 transition-colors"
-              onClick={() => setShowForm(true)}
+              onClick={() => {
+                setFormData(prev => ({ ...prev, eventDate: selectedDate }));
+                setShowForm(true);
+              }}
             >
               <span className="relative flex items-center gap-2 text-black">
                 Register Now
@@ -183,6 +228,30 @@ export function CandleConcert() {
                 </div>
               )}
               <div className="space-y-4">
+                <div className="flex gap-2 mb-4">
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, eventDate: 'april' }))}
+                    className={`flex-1 px-4 py-2 rounded-lg border ${
+                      formData.eventDate === 'april'
+                        ? 'bg-amber-400 text-black border-amber-400'
+                        : 'border-amber-400/30 text-amber-400 hover:bg-amber-400/10'
+                    } transition-all`}
+                  >
+                    April 9th
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, eventDate: 'may' }))}
+                    className={`flex-1 px-4 py-2 rounded-lg border ${
+                      formData.eventDate === 'may'
+                        ? 'bg-amber-400 text-black border-amber-400'
+                        : 'border-amber-400/30 text-amber-400 hover:bg-amber-400/10'
+                    } transition-all`}
+                  >
+                    May 4th
+                  </button>
+                </div>
                 <div>
                   <label className="flex items-center gap-2 text-amber-400 mb-2">
                     <User className="w-4 h-4" />
