@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Home } from './components/Home';
 import { CandleConcert } from './components/CandleConcert';
+import { NotFound } from './components/NotFound';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/candle" element={<CandleConcert />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
