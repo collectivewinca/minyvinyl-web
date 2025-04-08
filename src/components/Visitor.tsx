@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 import { Calendar, Clock, MapPin, Phone, Mail, User } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface Attendee {
   name: string;
@@ -44,14 +45,17 @@ export function Visitor() {
     : attendees.filter(a => a.eventDate === selectedEvent);
 
   return (
-    <div className="min-h-screen bg-black text-gray-300 py-12 px-4 md:px-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl md:text-3xl font-black text-amber-400">Registered Attendees</h1>
-          <div className="flex gap-2">
+    <div className="min-h-screen bg-black text-gray-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <Link to="/" className="text-amber-400 font-black text-2xl md:text-3xl">MINY</Link>
+            <h1 className="text-xl font-medium text-gray-300 mt-2">Registered Attendees</h1>
+          </div>
+          <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setSelectedEvent('all')}
-              className={`px-4 py-2 rounded-lg border ${
+              className={`px-4 py-1.5 rounded-full text-sm border ${
                 selectedEvent === 'all'
                   ? 'bg-amber-400 text-black border-amber-400'
                   : 'border-amber-400/30 text-amber-400 hover:bg-amber-400/10'
@@ -61,7 +65,7 @@ export function Visitor() {
             </button>
             <button
               onClick={() => setSelectedEvent('april')}
-              className={`px-4 py-2 rounded-lg border ${
+              className={`px-4 py-1.5 rounded-full text-sm border ${
                 selectedEvent === 'april'
                   ? 'bg-amber-400 text-black border-amber-400'
                   : 'border-amber-400/30 text-amber-400 hover:bg-amber-400/10'
@@ -71,7 +75,7 @@ export function Visitor() {
             </button>
             <button
               onClick={() => setSelectedEvent('may')}
-              className={`px-4 py-2 rounded-lg border ${
+              className={`px-4 py-1.5 rounded-full text-sm border ${
                 selectedEvent === 'may'
                   ? 'bg-amber-400 text-black border-amber-400'
                   : 'border-amber-400/30 text-amber-400 hover:bg-amber-400/10'
@@ -91,45 +95,47 @@ export function Visitor() {
         ) : filteredAttendees.length === 0 ? (
           <div className="text-center py-12 text-gray-500">No registrations found.</div>
         ) : (
-          <div className="grid gap-4">
+          <div className="space-y-3">
             {filteredAttendees.map((attendee, index) => (
               <div 
                 key={index}
-                className="bg-white/5 rounded-lg p-4 hover:bg-white/10 transition-colors"
+                className="bg-white/[0.02] border border-white/5 rounded-xl p-4 hover:bg-white/[0.04] transition-colors"
               >
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <User className="w-5 h-5 text-amber-400" />
-                    <span className="font-medium">{attendee.name}</span>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                  <div className="flex items-center gap-3 min-w-[200px]">
+                    <div className="w-8 h-8 rounded-full bg-amber-400/10 flex items-center justify-center">
+                      <User className="w-4 h-4 text-amber-400" />
+                    </div>
+                    <span className="font-medium text-white">{attendee.name}</span>
                   </div>
-                  <div className="flex flex-col md:flex-row gap-4 md:items-center text-sm">
-                    <div className="flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-amber-400" />
+                  <div className="flex flex-col sm:flex-row gap-3 sm:items-center text-sm flex-1">
+                    <div className="flex items-center gap-2 min-w-[200px]">
+                      <Mail className="w-4 h-4 text-amber-400/70" />
                       <a 
                         href={`mailto:${attendee.email}`}
-                        className="hover:text-amber-400 transition-colors"
+                        className="text-gray-400 hover:text-amber-400 transition-colors"
                       >
                         {attendee.email}
                       </a>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Phone className="w-4 h-4 text-amber-400" />
+                      <Phone className="w-4 h-4 text-amber-400/70" />
                       <a 
                         href={`tel:${attendee.phone}`}
-                        className="hover:text-amber-400 transition-colors"
+                        className="text-gray-400 hover:text-amber-400 transition-colors"
                       >
                         {attendee.phone}
                       </a>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-amber-400" />
-                      <span>
+                    <div className="flex items-center gap-2 ml-auto">
+                      <Calendar className="w-4 h-4 text-amber-400/70" />
+                      <span className="text-gray-400">
                         {attendee.eventDate === 'april' ? 'April 9th' : 'May 4th'}
                       </span>
                     </div>
-                    <div className="text-gray-500 text-xs">
-                      Registered on {attendee.createdAt.toLocaleDateString()}
-                    </div>
+                  </div>
+                  <div className="text-gray-500 text-xs whitespace-nowrap">
+                    Registered {attendee.createdAt.toLocaleDateString()}
                   </div>
                 </div>
               </div>
@@ -137,8 +143,13 @@ export function Visitor() {
           </div>
         )}
 
-        <div className="mt-8 text-center text-sm text-gray-500">
-          Total Registrations: {filteredAttendees.length}
+        <div className="mt-8 flex items-center justify-between text-sm text-gray-500 border-t border-white/5 pt-4">
+          <div>
+            Total Registrations: <span className="text-amber-400">{filteredAttendees.length}</span>
+          </div>
+          <div>
+            {selectedEvent !== 'all' && `Showing ${selectedEvent} event only`}
+          </div>
         </div>
       </div>
     </div>
