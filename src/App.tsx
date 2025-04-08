@@ -4,6 +4,7 @@ import { Navbar } from './components/Navbar';
 import { Home } from './components/Home';
 import { CandleConcert } from './components/CandleConcert';
 import { NotFound } from './components/NotFound';
+import { Visitor } from './components/Visitor';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/candle" element={<CandleConcert />} />
+        <Route path="/visitor" element={<Visitor />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
