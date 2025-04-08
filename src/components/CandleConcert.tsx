@@ -7,10 +7,20 @@ interface FormData {
   name: string;
   email: string;
   phone: string;
-  eventDate: string;
+  eventDate: 'april' | 'may';
 }
 
-const EVENTS = {
+type EventDetails = {
+  date: string;
+  time: string;
+  location: string;
+}
+
+type EventsType = {
+  [key in 'april' | 'may']: EventDetails;
+}
+
+const EVENTS: EventsType = {
   'april': {
     date: 'April 9, 2025 Wednesday',
     time: '8:00 PM - 10:00 PM',
@@ -31,32 +41,32 @@ const sendConfirmationEmail = async (name: string, email: string, eventDate: str
       <div style="background-color: #000000; padding: 30px; border-radius: 10px; color: #ffffff;">
         <h1 style="color: #fbbf24; text-align: center; font-size: 28px; margin-bottom: 20px;">Thank You for Registering!</h1>
         
-        <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+        <p style="color: #ffffff; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
           Dear ${name},
         </p>
         
-        <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+        <p style="color: #ffffff; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
           We're thrilled to confirm your registration for the Candlelight Concert! Your spot is now reserved for this special evening of music and ambiance.
         </p>
         
         <div style="background-color: #1a1a1a; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h2 style="color: #fbbf24; font-size: 20px; margin-bottom: 15px;">Event Details</h2>
-          <p style="margin: 10px 0;"><strong>Date:</strong> ${event.date}</p>
-          <p style="margin: 10px 0;"><strong>Time:</strong> ${event.time}</p>
-          <p style="margin: 10px 0;"><strong>Location:</strong> ${event.location}</p>
+          <p style="color: #ffffff; margin: 10px 0;"><strong style="color: #ffffff;">Date:</strong> ${event.date}</p>
+          <p style="color: #ffffff; margin: 10px 0;"><strong style="color: #ffffff;">Time:</strong> ${event.time}</p>
+          <p style="color: #ffffff; margin: 10px 0;"><strong style="color: #ffffff;">Location:</strong> ${event.location}</p>
         </div>
         
-        <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+        <p style="color: #ffffff; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
           We look forward to creating a magical evening with you. Please arrive 15 minutes before the concert begins.
         </p>
         
-        <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+        <p style="color: #ffffff; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
           If you have any questions, feel free to reply to this email.
         </p>
         
         <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #333;">
           <p style="color: #fbbf24; font-size: 14px;">MINY - Digital Vinyl Collectibles</p>
-          <p style="color: #666; font-size: 12px; margin-top: 5px;">
+          <p style="color: #ffffff; font-size: 12px; margin-top: 5px;">
             <a href="https://minyvinyl.com" style="color: #fbbf24; text-decoration: none;">minyvinyl.com</a>
           </p>
         </div>
