@@ -3,38 +3,57 @@ import { useState } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
 
+type EventDate = 'april' | 'may' | 'june';
+
 interface FormData {
+  eventDate: EventDate;
   name: string;
   email: string;
   phone: string;
-  eventDate: 'april' | 'may';
 }
 
-type EventDetails = {
+interface Event {
   date: string;
   time: string;
   location: string;
+  address: string;
+  googleMapsLink: string;
 }
 
-type EventsType = {
-  [key in 'april' | 'may']: EventDetails;
+interface EventsType {
+  [key: string]: Event;
 }
 
 const EVENTS: EventsType = {
-  'april': {
-    date: 'April 9, 2025 Wednesday',
-    time: '8:00 PM - 10:00 PM',
-    location: 'The 13th Storey - 216 E 45th St 13th Fl, New York, NY 10017'
+  april: {
+    date: 'April 17th',
+    time: '7:00 PM',
+    location: 'The Chapel',
+    address: '777 Valencia St, San Francisco, CA 94110',
+    googleMapsLink: 'https://maps.app.goo.gl/example1',
   },
-  'may': {
-    date: 'May 4, 2025 Saturday',
-    time: '8:00 PM - 10:00 PM',
-    location: 'The 13th Storey - 216 E 45th St 13th Fl, New York, NY 10017'
-  }
+  may: {
+    date: 'May 15th',
+    time: '7:00 PM',
+    location: 'The Chapel',
+    address: '777 Valencia St, San Francisco, CA 94110',
+    googleMapsLink: 'https://maps.app.goo.gl/example2',
+  },
+  june: {
+    date: 'June 19th',
+    time: '7:00 PM',
+    location: 'The Chapel',
+    address: '777 Valencia St, San Francisco, CA 94110',
+    googleMapsLink: 'https://maps.app.goo.gl/example3',
+  },
 };
 
-const sendConfirmationEmail = async (name: string, email: string, eventDate: string) => {
-  const event = eventDate === 'april' ? EVENTS.april : EVENTS.may;
+const sendConfirmationEmail = async (
+  name: string,
+  email: string,
+  eventDate: EventDate
+) => {
+  const event = EVENTS[eventDate];
   
   const emailContent = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f8f8;">
@@ -102,10 +121,10 @@ export function CandleConcert() {
   const [showForm, setShowForm] = useState(false);
   const [selectedDate, setSelectedDate] = useState('april');
   const [formData, setFormData] = useState<FormData>({
+    eventDate: 'april',
     name: '',
     email: '',
     phone: '',
-    eventDate: 'april'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -126,7 +145,12 @@ export function CandleConcert() {
       await sendConfirmationEmail(formData.name, formData.email, formData.eventDate);
       
       alert('Registration successful! We look forward to seeing you at the concert.');
-      setFormData({ name: '', email: '', phone: '', eventDate: 'april' });
+      setFormData({
+        eventDate: 'april',
+        name: '',
+        email: '',
+        phone: '',
+      });
       setShowForm(false);
     } catch (err) {
       setError('Failed to register. Please try again.');
@@ -183,6 +207,16 @@ export function CandleConcert() {
               >
                 May 4th
               </button>
+              <button
+                onClick={() => setSelectedDate('june')}
+                className={`px-6 py-2 rounded-full border ${
+                  selectedDate === 'june'
+                    ? 'bg-amber-400 text-black border-amber-400'
+                    : 'border-amber-400/30 text-amber-400 hover:bg-amber-400/10'
+                } transition-all`}
+              >
+                June 19th
+              </button>
             </div>
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-amber-400" />
@@ -222,7 +256,7 @@ export function CandleConcert() {
             <button
               className="group relative inline-flex items-center justify-center px-6 md:px-8 py-3 text-base md:text-lg font-black uppercase tracking-widest overflow-hidden bg-amber-400 rounded-lg hover:bg-amber-500 transition-colors"
               onClick={() => {
-                setFormData(prev => ({ ...prev, eventDate: selectedDate }));
+                setFormData(prev => ({ ...prev, eventDate: selectedDate as EventDate }));
                 setShowForm(true);
               }}
             >
@@ -241,7 +275,7 @@ export function CandleConcert() {
                 <div className="flex gap-2 mb-4">
                   <button
                     type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, eventDate: 'april' }))}
+                    onClick={() => setFormData(prev => ({ ...prev, eventDate: 'april' as EventDate }))}
                     className={`flex-1 px-4 py-2 rounded-lg border ${
                       formData.eventDate === 'april'
                         ? 'bg-amber-400 text-black border-amber-400'
@@ -252,7 +286,7 @@ export function CandleConcert() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, eventDate: 'may' }))}
+                    onClick={() => setFormData(prev => ({ ...prev, eventDate: 'may' as EventDate }))}
                     className={`flex-1 px-4 py-2 rounded-lg border ${
                       formData.eventDate === 'may'
                         ? 'bg-amber-400 text-black border-amber-400'
@@ -260,6 +294,17 @@ export function CandleConcert() {
                     } transition-all`}
                   >
                     May 4th
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, eventDate: 'june' as EventDate }))}
+                    className={`flex-1 px-4 py-2 rounded-lg border ${
+                      formData.eventDate === 'june'
+                        ? 'bg-amber-400 text-black border-amber-400'
+                        : 'border-amber-400/30 text-amber-400 hover:bg-amber-400/10'
+                    } transition-all`}
+                  >
+                    June 19th
                   </button>
                 </div>
                 <div>
