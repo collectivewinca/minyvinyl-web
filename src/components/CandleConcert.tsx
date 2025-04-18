@@ -26,14 +26,14 @@ interface EventsType {
 
 const EVENTS: EventsType = {
   april: {
-    date: 'April 17th',
+    date: 'April 9th',
     time: '7:00 PM',
     location: 'The Chapel',
     address: '777 Valencia St, San Francisco, CA 94110',
     googleMapsLink: 'https://maps.app.goo.gl/example1',
   },
   may: {
-    date: 'May 15th',
+    date: 'May 4th',
     time: '7:00 PM',
     location: 'The Chapel',
     address: '777 Valencia St, San Francisco, CA 94110',
@@ -119,9 +119,9 @@ const sendConfirmationEmail = async (
 
 export function CandleConcert() {
   const [showForm, setShowForm] = useState(false);
-  const [selectedDate, setSelectedDate] = useState('april');
+  const [selectedDate, setSelectedDate] = useState('may');
   const [formData, setFormData] = useState<FormData>({
-    eventDate: 'april',
+    eventDate: 'may',
     name: '',
     email: '',
     phone: '',
@@ -146,7 +146,7 @@ export function CandleConcert() {
       
       alert('Registration successful! We look forward to seeing you at the concert.');
       setFormData({
-        eventDate: 'april',
+        eventDate: 'may',
         name: '',
         email: '',
         phone: '',
@@ -307,67 +307,8 @@ export function CandleConcert() {
                     June 19th
                   </button>
                 </div>
-                <div>
-                  <label className="flex items-center gap-2 text-amber-400 mb-2">
-                    <User className="w-4 h-4" />
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    className="w-full px-4 py-2 bg-black/50 border border-amber-400/30 rounded-lg focus:outline-none focus:border-amber-400"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label className="flex items-center gap-2 text-amber-400 mb-2">
-                    <Mail className="w-4 h-4" />
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    className="w-full px-4 py-2 bg-black/50 border border-amber-400/30 rounded-lg focus:outline-none focus:border-amber-400"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label className="flex items-center gap-2 text-amber-400 mb-2">
-                    <Phone className="w-4 h-4" />
-                    Phone
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    className="w-full px-4 py-2 bg-black/50 border border-amber-400/30 rounded-lg focus:outline-none focus:border-amber-400"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  />
-                </div>
-                <button 
-                  type="submit" 
-                  disabled={isSubmitting}
-                  className="w-full bg-amber-400 text-black font-bold py-3 rounded-lg hover:bg-amber-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? 'Registering...' : 'Complete Registration'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowForm(false)}
-                  className="mt-3 w-full bg-transparent border border-amber-400/30 text-amber-400 font-bold py-3 rounded-lg hover:bg-amber-400/10 transition-colors"
-                >
-                  Cancel
-                </button>
               </div>
             </form>
-          )}
-          {showForm && (
-            <div 
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-20"
-              onClick={() => setShowForm(false)}
-            ></div>
           )}
         </div>
       </div>
