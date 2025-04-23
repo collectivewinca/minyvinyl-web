@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
 
-type EventDate = 'april' | 'may' | 'june';
+type EventDate = 'may' | 'june';
 
 interface FormData {
   eventDate: EventDate;
@@ -26,13 +26,6 @@ interface EventsType {
 }
 
 const EVENTS: EventsType = {
-  april: {
-    date: 'April 9th',
-    time: '7:00 PM',
-    location: '13th Storey',
-    address: '777 Valencia St, San Francisco, CA 94110',
-    googleMapsLink: 'https://maps.app.goo.gl/example1',
-  },
   may: {
     date: 'May 4th, 2025',
     time: '7:00 PM - 10:00 PM',
@@ -129,7 +122,7 @@ const sendConfirmationEmail = async (
 
 export function CandleConcert() {
   const [showForm, setShowForm] = useState(false);
-  const [selectedDate, setSelectedDate] = useState('may');
+  const [selectedDate, setSelectedDate] = useState<EventDate>('may');
   const [formData, setFormData] = useState<FormData>({
     eventDate: 'may',
     name: '',
@@ -204,16 +197,6 @@ export function CandleConcert() {
           <div className="flex flex-col gap-6 items-center justify-center text-base md:text-lg mb-12">
             <div className="flex gap-4 items-center justify-center">
               <button
-                onClick={() => setSelectedDate('april')}
-                className={`px-6 py-2 rounded-full border ${
-                  selectedDate === 'april'
-                    ? 'bg-amber-400 text-black border-amber-400'
-                    : 'border-amber-400/30 text-amber-400 hover:bg-amber-400/10'
-                } transition-all`}
-              >
-                April 9th
-              </button>
-              <button
                 onClick={() => setSelectedDate('may')}
                 className={`px-6 py-2 rounded-full border ${
                   selectedDate === 'may'
@@ -257,7 +240,7 @@ export function CandleConcert() {
             <button
               className="group relative inline-flex items-center justify-center px-6 md:px-8 py-3 text-base md:text-lg font-black uppercase tracking-widest overflow-hidden bg-amber-400 rounded-lg hover:bg-amber-500 transition-colors"
               onClick={() => {
-                setFormData(prev => ({ ...prev, eventDate: selectedDate as EventDate }));
+                setFormData(prev => ({ ...prev, eventDate: selectedDate }));
                 setShowForm(true);
               }}
             >
@@ -276,18 +259,7 @@ export function CandleConcert() {
                 <div className="flex gap-2 mb-4">
                   <button
                     type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, eventDate: 'april' as EventDate }))}
-                    className={`flex-1 px-4 py-2 rounded-lg border ${
-                      formData.eventDate === 'april'
-                        ? 'bg-amber-400 text-black border-amber-400'
-                        : 'border-amber-400/30 text-amber-400 hover:bg-amber-400/10'
-                    } transition-all`}
-                  >
-                    April 9th
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, eventDate: 'may' as EventDate }))}
+                    onClick={() => setFormData(prev => ({ ...prev, eventDate: 'may' }))}
                     className={`flex-1 px-4 py-2 rounded-lg border ${
                       formData.eventDate === 'may'
                         ? 'bg-amber-400 text-black border-amber-400'
@@ -298,7 +270,7 @@ export function CandleConcert() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, eventDate: 'june' as EventDate }))}
+                    onClick={() => setFormData(prev => ({ ...prev, eventDate: 'june' }))}
                     className={`flex-1 px-4 py-2 rounded-lg border ${
                       formData.eventDate === 'june'
                         ? 'bg-amber-400 text-black border-amber-400'
@@ -366,7 +338,7 @@ export function CandleConcert() {
           )}
           
           <div className="space-y-8 mb-12">
-            <div className="max-w-2xl text-center mx-auto bg-white/5 rounded-lg p-6">
+            <div className="max-w-2xl mx-auto bg-white/5 rounded-lg p-6">
               <h2 className="text-xl md:text-2xl font-bold text-amber-400 mb-4">Concert Policies</h2>
               <div className="space-y-4 text-sm md:text-base">
                 <div className="flex items-center gap-3">
