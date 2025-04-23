@@ -18,6 +18,7 @@ interface Event {
   location: string;
   address: string;
   googleMapsLink: string;
+  theme?: string;
 }
 
 interface EventsType {
@@ -28,25 +29,34 @@ const EVENTS: EventsType = {
   april: {
     date: 'April 9th',
     time: '7:00 PM',
-    location: 'The Chapel',
+    location: '13th Storey',
     address: '777 Valencia St, San Francisco, CA 94110',
     googleMapsLink: 'https://maps.app.goo.gl/example1',
   },
   may: {
-    date: 'May 4th',
-    time: '7:00 PM',
-    location: 'The Chapel',
+    date: 'May 4th, 2025',
+    time: '7:00 PM - 10:00 PM',
+    location: '13th Storey',
     address: '777 Valencia St, San Francisco, CA 94110',
     googleMapsLink: 'https://maps.app.goo.gl/example2',
+    theme: 'Star Wars Theme: "May the 4th Be With You"'
   },
   june: {
-    date: 'June 19th',
-    time: '7:00 PM',
-    location: 'The Chapel',
+    date: 'June 19th, 2025',
+    time: '7:00 PM - 10:00 PM',
+    location: '13th Storey',
     address: '777 Valencia St, San Francisco, CA 94110',
     googleMapsLink: 'https://maps.app.goo.gl/example3',
+    theme: 'Juneteenth Celebration'
   },
 };
+
+const PAST_EVENT_IMAGES = [
+  'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1000',
+  'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000',
+  'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1000',
+  'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000',
+];
 
 const sendConfirmationEmail = async (
   name: string,
@@ -185,6 +195,12 @@ export function CandleConcert() {
         <div className="mt-16 text-center">
           <h1 className="text-3xl md:text-5xl font-black text-amber-400 mb-8 tracking-tight">Candlelight Concert</h1>
           
+          {/* Past Events Section */}
+          
+
+          {/* Upcoming Events */}
+          <h2 className="text-2xl md:text-3xl font-bold text-amber-400 mb-6">Upcoming Events</h2>
+          
           <div className="flex flex-col gap-6 items-center justify-center text-base md:text-lg mb-12">
             <div className="flex gap-4 items-center justify-center">
               <button
@@ -230,26 +246,11 @@ export function CandleConcert() {
               <MapPin className="w-5 h-5 text-amber-400" />
               <span className="text-sm md:text-base">{currentEvent.location}</span>
             </div>
-          </div>
-          
-          <div className="space-y-8 mb-12">
-            <div className="max-w-2xl mx-auto bg-white/5 rounded-lg p-6">
-              <h2 className="text-xl md:text-2xl font-bold text-amber-400 mb-4">Concert Policies</h2>
-              <div className="space-y-4 text-sm md:text-base">
-                <div className="flex items-center gap-3">
-                  <Volume2Off className="w-5 h-5 text-amber-400 flex-shrink-0" />
-                  <p>Phones must be turned off during the performance</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Camera className="w-5 h-5 text-amber-400 flex-shrink-0" />
-                  <p>No photography or recording allowed</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Clock className="w-5 h-5 text-amber-400 flex-shrink-0" />
-                  <p>Late arrivals will not be admitted until the break</p>
-                </div>
+            {currentEvent.theme && (
+              <div className="mt-2 text-amber-400 font-semibold">
+                {currentEvent.theme}
               </div>
-            </div>
+            )}
           </div>
 
           {!showForm ? (
@@ -363,6 +364,50 @@ export function CandleConcert() {
               </div>
             </form>
           )}
+          
+          <div className="space-y-8 mb-12">
+            <div className="max-w-2xl text-center mx-auto bg-white/5 rounded-lg p-6">
+              <h2 className="text-xl md:text-2xl font-bold text-amber-400 mb-4">Concert Policies</h2>
+              <div className="space-y-4 text-sm md:text-base">
+                <div className="flex items-center gap-3">
+                  <Volume2Off className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                  <p>Phones must be turned off during the performance</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Camera className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                  <p>No photography or recording allowed</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Clock className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                  <p>Late arrivals will not be admitted until the break</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          
+
+          <div className="my-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-amber-400 mb-6">Past Events</h2>
+            <div className="bg-white/5 rounded-lg p-6">
+              <h3 className="text-xl font-semibold text-amber-400 mb-4">April 9th, 2024</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                {PAST_EVENT_IMAGES.map((image, index) => (
+                  <div key={index} className="relative aspect-square overflow-hidden rounded-lg">
+                    <img
+                      src={image}
+                      alt={`Concert photo ${index + 1}`}
+                      className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                ))}
+              </div>
+              <p className="text-gray-400 text-sm md:text-base">
+                Our first Candlelight Concert was a magical evening filled with beautiful music and warm ambiance. 
+                Thank you to everyone who joined us for this special event.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
