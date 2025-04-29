@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Smartphone, Disc, Lock, Share2, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { db } from '../../firebase';
+import { collection, addDoc } from 'firebase/firestore';
 
 const features = [
   {
@@ -66,6 +68,8 @@ const MinyExperience: React.FC = () => {
     email: '',
     phone: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
 
   const nextImage = () => {
@@ -98,13 +102,31 @@ const MinyExperience: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
-    console.log('Form submitted:', formData);
-    alert(`Thank you! An exclusive invite link will be sent to ${formData.email}`);
-    setIsModalOpen(false);
-    setFormData({ email: '', phone: '' });
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      // Add to waitlist collection in Firebase
+      await addDoc(collection(db, 'miny_waitlist'), {
+        email: formData.email,
+        phone: formData.phone,
+        createdAt: new Date()
+      });
+
+      // Show success message
+      alert(`Thank you! You've been added to the MINY app waitlist. We'll notify you at ${formData.email} when the app is ready.`);
+      
+      // Close modal and reset form
+      setIsModalOpen(false);
+      setFormData({ email: '', phone: '' });
+    } catch (err) {
+      console.error('Error adding to waitlist:', err);
+      setError('Failed to add to waitlist. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -238,10 +260,16 @@ const MinyExperience: React.FC = () => {
               <X className="w-6 h-6" />
             </button>
             
-            <h3 className="text-xl font-bold text-white mb-2">Get Exclusive Access</h3>
+            <h3 className="text-xl font-bold text-white mb-2">Get Early Access to MINY App</h3>
             <p className="text-gray-300 mb-6">
-              Join our community to receive exclusive invites to future events and download the MINY app.
+              Join our waitlist to be among the first to experience the MINY app. We'll send you an exclusive invite when it's ready.
             </p>
+            
+            {error && (
+              <div className="mb-4 p-3 bg-red-500/20 border border-red-500 rounded-lg text-red-200">
+                {error}
+              </div>
+            )}
             
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -279,9 +307,10 @@ const MinyExperience: React.FC = () => {
               <div className="pt-4">
                 <button
                   type="submit"
-                  className="w-full px-4 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-black bg-white hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-black bg-white hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Get Exclusive Invite
+                  {isSubmitting ? 'Adding to Waitlist...' : 'Join Waitlist'}
                 </button>
               </div>
             </form>
