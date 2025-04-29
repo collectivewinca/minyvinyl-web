@@ -9,7 +9,7 @@ export function Home() {
           href="https://minyfy.minyvinyl.com/" 
           target="_blank" 
           rel="noopener noreferrer" 
-          className="text-amber-400 hover:text-amber-300 transition-colors text-xl md:text-2xl"
+          className="text-amber-400 hover:text-amber-300 transition-colors text-base md:text-lg"
         >
           Claim a MINY
         </a>

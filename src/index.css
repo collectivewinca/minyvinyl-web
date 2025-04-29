@@ -11,26 +11,12 @@
   scroll-behavior: smooth;
 }
 
-html {
-  font-size: 10px;
-}
-
 body {
-  font-family: "Montserrat", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 900;
-  font-style: normal;
   background: black;
   overflow-x: hidden;
 }
 
 body, .pov {
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
 }
 
 .die {

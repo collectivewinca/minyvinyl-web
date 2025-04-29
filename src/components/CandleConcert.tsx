@@ -139,7 +139,7 @@ export function CandleConcert() {
 
     try {
       // Add registration to Firestore
-      await addDoc(collection(db, 'minyvinyl_registrations'), {
+      await addDoc(collection(db, 'candlelight_registrations'), {
         ...formData,
         createdAt: new Date()
       });
@@ -147,14 +147,8 @@ export function CandleConcert() {
       // Send confirmation email
       await sendConfirmationEmail(formData.name, formData.email, formData.eventDate);
       
-      alert('Registration successful! We look forward to seeing you at the concert.');
-      setFormData({
-        eventDate: 'may',
-        name: '',
-        email: '',
-        phone: '',
-      });
-      setShowForm(false);
+      // Redirect to booking page
+      window.location.href = '/miny-events#book-now';
     } catch (err) {
       setError('Failed to register. Please try again.');
       console.error('Registration error:', err);
@@ -168,14 +162,6 @@ export function CandleConcert() {
   return (
     <div className="min-h-screen bg-black text-gray-300 py-12 px-4 md:px-6 overflow-y-auto">
       <div className="max-w-4xl mx-auto">
-        <div className="hidden md:block fixed top-3 right-3 z-20">
-          <button
-            onClick={() => setShowForm(true)}
-            className="bg-amber-400 text-black font-bold py-3 px-8 rounded-lg hover:bg-amber-500 transition-colors text-base shadow-lg hover:shadow-amber-400/20"
-          >
-            Register Now
-          </button>
-        </div>
         <div className="holder">
           <div className="candle">
             <div className="blinking-glow"></div>
@@ -186,15 +172,11 @@ export function CandleConcert() {
         </div>
         
         <div className="mt-16 text-center">
-          <h1 className="text-3xl md:text-5xl font-black text-amber-400 mb-8 tracking-tight">Candlelight Concert</h1>
+          <h1 className="text-2xl md:text-4xl font-black text-amber-400 mb-8 tracking-tight">Candlelight Concert</h1>
           
-          {/* Past Events Section */}
+          <h2 className="text-xl md:text-2xl font-bold text-amber-400 mb-6">Upcoming Events</h2>
           
-
-          {/* Upcoming Events */}
-          <h2 className="text-2xl md:text-3xl font-bold text-amber-400 mb-6">Upcoming Events</h2>
-          
-          <div className="flex flex-col gap-6 items-center justify-center text-base md:text-lg mb-12">
+          <div className="flex flex-col gap-6 items-center justify-center text-sm md:text-base mb-12">
             <div className="flex gap-4 items-center justify-center">
               <button
                 onClick={() => setSelectedDate('may')}
@@ -240,8 +222,7 @@ export function CandleConcert() {
             <button
               className="group relative inline-flex items-center justify-center px-6 md:px-8 py-3 text-base md:text-lg font-black uppercase tracking-widest overflow-hidden bg-amber-400 rounded-lg hover:bg-amber-500 transition-colors"
               onClick={() => {
-                setFormData(prev => ({ ...prev, eventDate: selectedDate }));
-                setShowForm(true);
+                window.location.href = '/miny-events#book-now';
               }}
             >
               <span className="relative flex items-center gap-2 text-black">
