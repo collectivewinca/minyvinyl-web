@@ -232,7 +232,7 @@ const BookingCTA: React.FC = () => {
       });
 
       // Create Stripe checkout session with the registration ID
-      const response = await fetch('https://payment-test.alet8891.workers.dev', {
+      const response = await fetch('https://payment-gateway.alet8891.workers.dev', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -250,6 +250,7 @@ const BookingCTA: React.FC = () => {
               ? `Annual subscription to all MINY events (12 months at $29/month) + ${selectedEvents.map(e => `${e.name} x${e.quantity} (40% off)`).join(', ')}`
               : 'Annual subscription to all MINY events (12 months at $29/month)'
             : selectedEvents.map(e => `${e.name} x${e.quantity}`).join(', '),
+          productImage: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2574',
           successUrl: `${window.location.origin}/success?registrationId=${registrationRef.id}`,
           cancelUrl: `${window.location.origin}/miny-events`,
           metadata: {
